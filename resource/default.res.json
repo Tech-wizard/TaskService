@@ -1,0 +1,45 @@
+{
+	"groups": [
+		{
+			"keys": "bg_jpg,egret_icon_png,description_json,button ok_png,question_png,notice_png,panel_jpg",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"name": "bg_jpg",
+			"type": "image",
+			"url": "assets/bg.jpg"
+		},
+		{
+			"name": "egret_icon_png",
+			"type": "image",
+			"url": "assets/egret_icon.png"
+		},
+		{
+			"name": "description_json",
+			"type": "json",
+			"url": "config/description.json"
+		},
+		{
+			"name": "button ok_png",
+			"type": "image",
+			"url": "assets/button ok.png"
+		},
+		{
+			"name": "question_png",
+			"type": "image",
+			"url": "assets/question.png"
+		},
+		{
+			"name": "notice_png",
+			"type": "image",
+			"url": "assets/notice.png"
+		},
+		{
+			"name": "panel_jpg",
+			"type": "image",
+			"url": "assets/panel.jpg"
+		}
+	]
+}
