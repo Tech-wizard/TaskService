@@ -80,7 +80,7 @@ class TaskService {
     public addObserver(observer: Observer) {
           for (var i = 0; i < this.observerList.length; i++) {
             if (observer == this.observerList[i])
-                return;
+                return ErrorCode.REPEAT_OBSERVER;
         }
         this.observerList.push(observer);
     }
@@ -88,5 +88,7 @@ class TaskService {
 
 enum ErrorCode {
     SUCCESS,
-    MISSING_TASK
+    MISSING_TASK,
+    REPEAT_OBSERVER
+
 }

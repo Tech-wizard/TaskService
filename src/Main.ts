@@ -139,15 +139,15 @@ class Main extends egret.DisplayObjectContainer {
 
        
        var taskService: TaskService = TaskService.getInstance();
-        var NPC_0:NPC = new NPC("NPC_0");
-        var NPC_1:NPC = new NPC("NPC_1");
+        var NPC_0:NPC = new NPC("NPC_1",100,100);
+        var NPC_1:NPC = new NPC("NPC_2",200,400);
         var task_0:Task = new Task("000","对话任务");
-        task_0.fromNpcId = "NPC_0";
-        task_0.toNpcId = "NPC_1";
+        task_0.fromNpcId = "NPC_1";
+        task_0.toNpcId = "NPC_2";
         task_0.desc = "请先跟NPC0对话，再跟NPC1对话";
         task_0.status == TaskStatus.UNACCEPTABLE;
         TaskService.getInstance().addTask(task_0);
-        var mainPanel:TaskPanel = new TaskPanel();
+        var mainPanel:TaskPanel = new TaskPanel(50,600);
         TaskService.getInstance().addObserver(mainPanel);
         
     }
