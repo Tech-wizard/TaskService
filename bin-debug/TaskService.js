@@ -1,48 +1,36 @@
-class TaskService {
-
-    private static instance;
-    private static count = 0;
-    private taskList: {
-        [index: string]: Task
-    } = {};
-
-    private observerList: Observer[] = [];
-
-    constructor() {
+var TaskService = (function () {
+    function TaskService() {
+        this.taskList = {};
+        this.observerList = [];
         TaskService.count++;
         if (TaskService.count > 1) {
             throw "singleton!!!";
         }
     }
-    public static getInstance() {
+    var d = __define,c=TaskService,p=c.prototype;
+    TaskService.getInstance = function () {
         if (TaskService.instance == null) {
             TaskService.instance = new TaskService();
         }
         return TaskService.instance;
-    }
-
-    public getTaskByCustomRule(): Task {
+    };
+    p.getTaskByCustomRule = function () {
         for (var id in this.taskList) {
             var task = this.taskList[id];
             if (task.status == TaskStatus.CAN_SUBMIT)
                 return task;
         }
-
         for (var id in this.taskList) {
             var task = this.taskList[id];
             if (task.status == TaskStatus.UNACCEPTABLE)
                 return task;
         }
-
-    }
-
-
-    accept(id: string) {
+    };
+    p.accept = function (id) {
         if (!id) {
             return ErrorCode.MISSING_TASK;
         }
-
-        let task = this.taskList[id];
+        var task = this.taskList[id];
         if (task.id = id) {
             task.status == TaskStatus.DURING;
             this.notify(this.taskList[id]);
@@ -51,14 +39,12 @@ class TaskService {
         else {
             return ErrorCode.MISSING_TASK;
         }
-
-    }
-
-    finish(id: string) {
+    };
+    p.finish = function (id) {
         if (!id) {
             return ErrorCode.MISSING_TASK;
         }
-        let task = this.taskList[id];
+        var task = this.taskList[id];
         if (task.id = id) {
             task.status = TaskStatus.SUBMITED;
             this.notify(this.taskList[id]);
@@ -67,30 +53,31 @@ class TaskService {
         else {
             return ErrorCode.MISSING_TASK;
         }
-    }
-
-    private notify(task: Task) {
-        for (var observer of this.observerList) {
+    };
+    p.notify = function (task) {
+        for (var _i = 0, _a = this.observerList; _i < _a.length; _i++) {
+            var observer = _a[_i];
             observer.onChange(task);
         }
-    }
-
-    public addTask(task: Task) {
+    };
+    p.addTask = function (task) {
         this.taskList[task.id] = task;
-    }
-
-    public addObserver(observer: Observer) {
+    };
+    p.addObserver = function (observer) {
         for (var i = 0; i < this.observerList.length; i++) {
             if (observer == this.observerList[i])
                 return ErrorCode.REPEAT_OBSERVER;
         }
         this.observerList.push(observer);
-    }
-}
-
-enum ErrorCode {
-    SUCCESS,
-    MISSING_TASK,
-    REPEAT_OBSERVER
-
-}
+    };
+    TaskService.count = 0;
+    return TaskService;
+}());
+egret.registerClass(TaskService,'TaskService');
+var ErrorCode;
+(function (ErrorCode) {
+    ErrorCode[ErrorCode["SUCCESS"] = 0] = "SUCCESS";
+    ErrorCode[ErrorCode["MISSING_TASK"] = 1] = "MISSING_TASK";
+    ErrorCode[ErrorCode["REPEAT_OBSERVER"] = 2] = "REPEAT_OBSERVER";
+})(ErrorCode || (ErrorCode = {}));
+//# sourceMappingURL=TaskService.js.map

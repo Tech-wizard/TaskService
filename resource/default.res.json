@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,button ok_png,question_png,notice_png,panel_jpg",
+			"keys": "bg_jpg,egret_icon_png,description_json,question_png,notice_png,panel_jpg,npc1_jpg,npc2_jpg,ok_png",
 			"name": "preload"
 		}
 	],
@@ -22,11 +22,6 @@
 			"url": "config/description.json"
 		},
 		{
-			"name": "button ok_png",
-			"type": "image",
-			"url": "assets/button ok.png"
-		},
-		{
 			"name": "question_png",
 			"type": "image",
 			"url": "assets/question.png"
@@ -40,6 +35,21 @@
 			"name": "panel_jpg",
 			"type": "image",
 			"url": "assets/panel.jpg"
+		},
+		{
+			"name": "npc1_jpg",
+			"type": "image",
+			"url": "assets/npc1.jpg"
+		},
+		{
+			"name": "npc2_jpg",
+			"type": "image",
+			"url": "assets/npc2.jpg"
+		},
+		{
+			"name": "ok_png",
+			"type": "image",
+			"url": "assets/ok.png"
 		}
 	]
 }
