@@ -7,6 +7,7 @@ var NPC = (function (_super) {
         this._emoji = new egret.Bitmap();
         this.dialoguePanel = dp;
         this._body.texture = RES.getRes(ad);
+        this._emoji.texture = RES.getRes("notice_png");
         this.id = id;
         this.x = x;
         this.y = y;
@@ -14,6 +15,8 @@ var NPC = (function (_super) {
         this._body.height = this._body.height / 3;
         this._emoji.width = this._emoji.width / 5;
         this._emoji.height = this._emoji.height / 5;
+        this._emoji.y = -100;
+        this._emoji.alpha = 0;
         this.addChild(this._body);
         this.addChild(this._emoji);
         this.touchEnabled = true;
@@ -21,21 +24,19 @@ var NPC = (function (_super) {
     }
     var d = __define,c=NPC,p=c.prototype;
     p.onChange = function (task) {
-        if (task.status == TaskStatus.UNACCEPTABLE && this.id == task.fromNpcId) {
-            task.status = TaskStatus.ACCEPTABLE;
-            this._emoji.texture = RES.getRes("notice_png");
-        }
         if (task.status == TaskStatus.ACCEPTABLE && this.id == task.fromNpcId) {
-            task.status = TaskStatus.DURING;
+            //task.status = TaskStatus.DURING;
+            //this._emoji.texture = RES.getRes("question_png");
+            this._emoji.alpha = 1;
+        }
+        if (task.status == TaskStatus.CAN_SUBMIT && this.id == task.fromNpcId) {
+            //task.status = TaskStatus.;
             //this._emoji.texture = RES.getRes("question_png");
             this._emoji.alpha = 0;
         }
-        if (task.status == TaskStatus.ACCEPTABLE && this.id == task.toNpcId) {
-            task.status = TaskStatus.DURING;
+        if (task.status == TaskStatus.CAN_SUBMIT && this.id == task.toNpcId) {
             this._emoji.texture = RES.getRes("question_png");
-        }
-        if (task.status == TaskStatus.DURING && this.id == task.toNpcId) {
-            this._emoji.texture = RES.getRes("question_png");
+            this._emoji.alpha = 1;
         }
         if (task.status == TaskStatus.SUBMITED && this.id == task.toNpcId) {
             this._emoji.alpha = 0;
@@ -58,18 +59,22 @@ var TaskPanel = (function (_super) {
         this.body = new egret.Shape();
         this.textField = new egret.TextField();
         this.body.graphics.beginFill(0x000000, 0.4);
-        this.body.graphics.drawRect(0, 0, 400, 100);
+        this.body.graphics.drawRect(0, 0, 600, 100);
         this.body.graphics.endFill();
         this.textField.text = "   任务进程    ";
         this.textField.x = x;
         this.textField.x = y;
-        //this.textField.text = this.task.name + ":" + this.task.status.toString();
+        this.textField2 = new egret.TextField();
+        this.textField2.x = x + 20;
+        this.textField2.y = y + 30;
         this.addChild(this.body);
         this.addChild(this.textField);
+        this.addChild(this.textField2);
     }
     var d = __define,c=TaskPanel,p=c.prototype;
     p.onChange = function (task) {
-        this.textField.text = task.name + ":" + task.status;
+        this.textField.text = task.desc;
+        this.textField2.text = task.name + " :" + task.status.toString();
     };
     return TaskPanel;
 }(egret.DisplayObjectContainer));
@@ -94,26 +99,28 @@ var DialoguePanel = (function (_super) {
         this.button.y = 550;
         this.button.touchEnabled = true;
         this.button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
-        this.addChild(this.body);
-        this.addChild(this.button);
-        this.addChild(this.textField);
-        this.alpha = 0;
     }
     var d = __define,c=DialoguePanel,p=c.prototype;
     p.showDpanel = function () {
-        this.alpha = 1;
+        this.addChild(this.body);
+        this.addChild(this.button);
+        this.addChild(this.textField);
     };
     p.disshowDpanel = function () {
-        this.alpha = 0;
+        this.removeChild(this.body);
+        this.removeChild(this.button);
+        this.removeChild(this.textField);
+        //this.alpha=0;
     };
     p.onButtonClick = function () {
         this.disshowDpanel();
         switch (TaskService.getInstance().taskList["000"].status) {
             case TaskStatus.ACCEPTABLE:
-                TaskService.getInstance().accept(TaskService.getInstance().taskList["000"].Id);
+                TaskService.getInstance().accept("000");
                 break;
             case TaskStatus.CAN_SUBMIT:
-                TaskService.getInstance().finish(TaskService.getInstance().taskList["000"].Id);
+                //console.log(TaskService.getInstance().finish("000"));
+                TaskService.getInstance().finish("000");
                 break;
             default:
                 return;

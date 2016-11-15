@@ -22,7 +22,7 @@ var TaskService = (function () {
         }
         for (var id in this.taskList) {
             var task = this.taskList[id];
-            if (task.status == TaskStatus.UNACCEPTABLE)
+            if (task.status == TaskStatus.ACCEPTABLE)
                 return task;
         }
     };
@@ -31,9 +31,10 @@ var TaskService = (function () {
             return ErrorCode.MISSING_TASK;
         }
         var task = this.taskList[id];
-        if (task.id = id) {
-            task.status == TaskStatus.DURING;
+        if (task.id == id) {
+            task.status = TaskStatus.CAN_SUBMIT;
             this.notify(this.taskList[id]);
+            console.log("111");
             return ErrorCode.SUCCESS;
         }
         else {
@@ -45,7 +46,7 @@ var TaskService = (function () {
             return ErrorCode.MISSING_TASK;
         }
         var task = this.taskList[id];
-        if (task.id = id) {
+        if (task.id == id) {
             task.status = TaskStatus.SUBMITED;
             this.notify(this.taskList[id]);
             return ErrorCode.SUCCESS;
@@ -55,6 +56,7 @@ var TaskService = (function () {
         }
     };
     p.notify = function (task) {
+        // console.log("111");
         for (var _i = 0, _a = this.observerList; _i < _a.length; _i++) {
             var observer = _a[_i];
             observer.onChange(task);

@@ -30,7 +30,7 @@ class TaskService {
 
         for (var id in this.taskList) {
             var task = this.taskList[id];
-            if (task.status == TaskStatus.UNACCEPTABLE)
+            if (task.status == TaskStatus.ACCEPTABLE)
                 return task;
         }
 
@@ -41,11 +41,11 @@ class TaskService {
         if (!id) {
             return ErrorCode.MISSING_TASK;
         }
-
         let task = this.taskList[id];
-        if (task.id = id) {
-            task.status == TaskStatus.DURING;
+        if (task.id == id) {
+            task.status = TaskStatus.CAN_SUBMIT;
             this.notify(this.taskList[id]);
+            console.log("111");
             return ErrorCode.SUCCESS;
         }
         else {
@@ -59,9 +59,10 @@ class TaskService {
             return ErrorCode.MISSING_TASK;
         }
         let task = this.taskList[id];
-        if (task.id = id) {
+        if (task.id == id) {
             task.status = TaskStatus.SUBMITED;
             this.notify(this.taskList[id]);
+          
             return ErrorCode.SUCCESS;
         }
         else {
@@ -70,6 +71,7 @@ class TaskService {
     }
 
     private notify(task: Task) {
+       // console.log("111");
         for (var observer of this.observerList) {
             observer.onChange(task);
         }

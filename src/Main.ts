@@ -132,8 +132,9 @@ class Main extends egret.DisplayObjectContainer {
         var task_0: Task = new Task("000", "对话任务");
         task_0.fromNpcId = "NPC_1";
         task_0.toNpcId = "NPC_2";
-        task_0.desc = "请先跟NPC0对话，再跟NPC1对话";
-        task_0.status == TaskStatus.UNACCEPTABLE;
+        task_0.desc = "请先跟NPC1对话，再跟NPC2对话";       
+        task_0.status = TaskStatus.ACCEPTABLE;
+        
          TaskService.getInstance().addTask(task_0);
         var mainPanel: TaskPanel = new TaskPanel(50, 0);
         TaskService.getInstance().addObserver(mainPanel);
@@ -144,6 +145,9 @@ class Main extends egret.DisplayObjectContainer {
         this.addChild(NPC_2);
         this.addChild(Dpanel_1);
         this.addChild(Dpanel_2);
+
+       TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
+       console.log(TaskService.getInstance().taskList["000"]);
     }
 
 
