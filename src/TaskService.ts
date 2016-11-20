@@ -1,4 +1,9 @@
-class TaskService {
+interface EventEmitter {
+    addObserver(observer: Observer);
+    notify(task: Task);
+}
+
+class TaskService implements EventEmitter {
 
     private static instance;
     private static count = 0;
@@ -22,6 +27,7 @@ class TaskService {
     }
 
     public getTaskByCustomRule(): Task {
+
         for (var id in this.taskList) {
             var task = this.taskList[id];
             if (task.status == TaskStatus.CAN_SUBMIT)
@@ -44,8 +50,9 @@ class TaskService {
         let task = this.taskList[id];
         if (task.id == id) {
             task.status = TaskStatus.CAN_SUBMIT;
+            task.onAccept();
             this.notify(this.taskList[id]);
-            console.log("111");
+           
             return ErrorCode.SUCCESS;
         }
         else {
@@ -62,7 +69,7 @@ class TaskService {
         if (task.id == id) {
             task.status = TaskStatus.SUBMITED;
             this.notify(this.taskList[id]);
-          
+
             return ErrorCode.SUCCESS;
         }
         else {
@@ -70,8 +77,8 @@ class TaskService {
         }
     }
 
-    private notify(task: Task) {
-       // console.log("111");
+   public  notify(task: Task) {
+        // console.log("111");
         for (var observer of this.observerList) {
             observer.onChange(task);
         }
@@ -88,6 +95,8 @@ class TaskService {
         }
         this.observerList.push(observer);
     }
+
+   
 }
 
 enum ErrorCode {
@@ -96,3 +105,9 @@ enum ErrorCode {
     REPEAT_OBSERVER
 
 }
+
+
+
+
+
+

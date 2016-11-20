@@ -33,8 +33,8 @@ var TaskService = (function () {
         var task = this.taskList[id];
         if (task.id == id) {
             task.status = TaskStatus.CAN_SUBMIT;
+            task.onAccept();
             this.notify(this.taskList[id]);
-            console.log("111");
             return ErrorCode.SUCCESS;
         }
         else {
@@ -75,7 +75,7 @@ var TaskService = (function () {
     TaskService.count = 0;
     return TaskService;
 }());
-egret.registerClass(TaskService,'TaskService');
+egret.registerClass(TaskService,'TaskService',["EventEmitter"]);
 var ErrorCode;
 (function (ErrorCode) {
     ErrorCode[ErrorCode["SUCCESS"] = 0] = "SUCCESS";

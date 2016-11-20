@@ -1,9 +1,23 @@
 var Task = (function () {
-    function Task(id, name) {
+    function Task(id, name, condition) {
+        this._current = 0;
         this._id = id;
         this._name = name;
+        this._condition = condition;
     }
     var d = __define,c=Task,p=c.prototype;
+    p.checkStatus = function () {
+        if (this._status == TaskStatus.DURING &&
+            this._current >= this.total) {
+            this._status = TaskStatus.CAN_SUBMIT;
+        }
+        TaskService.getInstance().notify(this);
+    };
+    d(p, "condition"
+        ,function () {
+            return this._condition;
+        }
+    );
     d(p, "status"
         ,function () {
             return this._status;
@@ -28,9 +42,19 @@ var Task = (function () {
             this._name = name;
         }
     );
+    p.getcurrent = function () {
+        return this._current;
+    };
+    p.setcurrent = function (current) {
+        this._current = current;
+        this.checkStatus();
+    };
+    p.onAccept = function () {
+        this._condition.onAccept(this);
+    };
     return Task;
 }());
-egret.registerClass(Task,'Task');
+egret.registerClass(Task,'Task',["TaskConditionContext"]);
 var TaskStatus;
 (function (TaskStatus) {
     TaskStatus[TaskStatus["UNACCEPTABLE"] = 0] = "UNACCEPTABLE";
@@ -39,4 +63,44 @@ var TaskStatus;
     TaskStatus[TaskStatus["CAN_SUBMIT"] = 3] = "CAN_SUBMIT";
     TaskStatus[TaskStatus["SUBMITED"] = 4] = "SUBMITED";
 })(TaskStatus || (TaskStatus = {}));
+var KillMonsterTaskCondition = (function () {
+    function KillMonsterTaskCondition() {
+    }
+    var d = __define,c=KillMonsterTaskCondition,p=c.prototype;
+    p.onAccept = function (task) {
+        //task.current++;
+        // var temp = 0;
+        // temp = task.getcurrent();
+        // task.setcurrent(temp++);
+        //  task.checkStatus();
+        task.setcurrent(task.getcurrent());
+    };
+    p.onSubmit = function (task) {
+        //  TaskService.getInstance().taskList["001"].status=TaskStatus.CAN_SUBMIT;
+    };
+    p.onChange = function (task) {
+        var temp = 0;
+        temp = task.getcurrent();
+        task.setcurrent(temp++);
+    };
+    return KillMonsterTaskCondition;
+}());
+egret.registerClass(KillMonsterTaskCondition,'KillMonsterTaskCondition',["TaskConditon","Observer"]);
+var NPCTalkTaskCondition = (function () {
+    function NPCTalkTaskCondition() {
+    }
+    var d = __define,c=NPCTalkTaskCondition,p=c.prototype;
+    p.onAccept = function (task) {
+        //task.current++;
+        var temp = 0;
+        temp = task.getcurrent();
+        task.setcurrent(temp++);
+        // task.checkStatus();
+    };
+    p.onSubmit = function (task) {
+        //  TaskService.getInstance().taskList["000"].status=TaskStatus.CAN_SUBMIT;
+    };
+    return NPCTalkTaskCondition;
+}());
+egret.registerClass(NPCTalkTaskCondition,'NPCTalkTaskCondition',["TaskConditon"]);
 //# sourceMappingURL=Task.js.map

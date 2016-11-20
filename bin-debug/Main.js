@@ -103,17 +103,39 @@ var Main = (function (_super) {
         // topMask.graphics.endFill();
         // topMask.y = 33;
         // this.addChild(topMask);
+        // function createTalkCondition(){  工厂模式
+        // return new NPCTalkTaskCondition();
+        // }
+        // function createTask(id:string){
+        //     var data ={
+        //        "000" : {name:"122",conditions:new NPCTalkTaskCondition()},
+        //         "001" : { name:"122",conditions:new KillMonsterTaskCondition()}
+        // }
+        // var info = data[id];
+        // if(!info){
+        //     console.log("Missing");
+        // }
+        //         return new Task(id, info.name,new NPCTalkTaskCondition());
+        //     }
         //var taskService: TaskService = new TaskService();
-        var Dpanel_1 = new DialoguePanel("你好，请告诉对面的人");
-        var Dpanel_2 = new DialoguePanel("好的，我知道了");
+        var Dpanel_1 = new DialoguePanel("你好，请告诉对面的人", NPC_1);
+        var Dpanel_2 = new DialoguePanel("好的，我知道了", NPC_2);
         var NPC_1 = new NPC("NPC_1", "npc1_jpg", 150, 250, Dpanel_1);
         var NPC_2 = new NPC("NPC_2", "npc2_jpg", 250, 850, Dpanel_2);
-        var task_0 = new Task("000", "对话任务");
+        var task_0 = new Task("000", "对话任务", new NPCTalkTaskCondition());
         task_0.fromNpcId = "NPC_1";
         task_0.toNpcId = "NPC_2";
         task_0.desc = "请先跟NPC1对话，再跟NPC2对话";
+        task_0.total = 1;
         task_0.status = TaskStatus.ACCEPTABLE;
+        var task_1 = new Task("001", "杀怪任务", new KillMonsterTaskCondition());
+        task_1.fromNpcId = "NPC_2";
+        task_1.toNpcId = "NPC_2";
+        task_1.desc = "请杀掉10个白鹭icon怪物";
+        task_1.total = 10;
+        task_1.status = TaskStatus.UNACCEPTABLE;
         TaskService.getInstance().addTask(task_0);
+        TaskService.getInstance().addTask(task_1);
         var mainPanel = new TaskPanel(50, 0);
         TaskService.getInstance().addObserver(mainPanel);
         TaskService.getInstance().addObserver(NPC_1);
@@ -124,7 +146,13 @@ var Main = (function (_super) {
         this.addChild(Dpanel_1);
         this.addChild(Dpanel_2);
         TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
-        console.log(TaskService.getInstance().taskList["000"]);
+        var monster_1 = new MockKillMonsterButton("egret_icon_png");
+        this.addChild(monster_1);
+        monster_1.body.x = 300;
+        monster_1.body.y = 600;
+        var scenceService = new SceneService();
+        scenceService.addObserver(monster_1);
+        //scenceService.addObserver();
     };
     p.createBitmapByName = function (name) {
         var result = new egret.Bitmap();
