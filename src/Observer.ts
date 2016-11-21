@@ -38,6 +38,17 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
             this._emoji.alpha = 1;
         }
 
+        if (task.status == TaskStatus.DURING && this.id == task.fromNpcId) {
+            
+            this._emoji.alpha = 0;
+        }
+
+        if (task.status == TaskStatus.DURING && this.id == task.toNpcId) {
+            this._emoji.texture = RES.getRes("question_png");
+            this._emoji.alpha = 1;
+        }
+
+
         if (task.status == TaskStatus.CAN_SUBMIT && this.id == task.fromNpcId) {
             //this._emoji.texture = RES.getRes("question_png");
             this._emoji.alpha = 0;
@@ -112,9 +123,9 @@ class DialoguePanel extends egret.DisplayObjectContainer {
     button: Button;
     textField: egret.TextField;
     body: egret.Shape;
-    currentTask:Task;
-    linkNPC:NPC;
-    nextTask:Task;
+    currentTask: Task;
+    linkNPC: NPC;
+    nextTask: Task;
 
     constructor(talk: string) {
 
@@ -135,29 +146,29 @@ class DialoguePanel extends egret.DisplayObjectContainer {
         this.button.y = 550;
         this.button.touchEnabled = true;
         this.button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
-        
-       
+
+
     }
 
     showDpanel() {
 
         this.addChild(this.body);
         this.addChild(this.button);
-        this.addChild(this.textField);  
-           
+        this.addChild(this.textField);
+
     }
 
-    public updateViewByTask(task:Task){
+    public updateViewByTask(task: Task) {
         this.currentTask = task;
         //this.textField.text = this.currentTask.desc;
-        
+
     }
 
     disshowDpanel() {
         this.removeChild(this.body);
         this.removeChild(this.button);
         this.removeChild(this.textField);
-       
+
     }
 
     onButtonClick() {
@@ -165,24 +176,25 @@ class DialoguePanel extends egret.DisplayObjectContainer {
         this.disshowDpanel();
         switch (this.currentTask.status) {
             case TaskStatus.ACCEPTABLE:
-               
+
                 TaskService.getInstance().accept(this.currentTask.id);
 
                 break;
             case TaskStatus.CAN_SUBMIT:
-                //console.log(TaskService.getInstance().finish("000"));
+                console.log("11");
                 TaskService.getInstance().finish(this.currentTask.id);
-                TaskService.getInstance().taskList["001"].status = TaskStatus.ACCEPTABLE;
+                if(TaskService.getInstance().getNextTask()!=null)
+                {TaskService.getInstance().getNextTask().status = TaskStatus.ACCEPTABLE;}
                 //this.linkNPC._emoji.alpha = 1;
                 this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
-                TaskService.getInstance().notify(this.currentTask);
+                TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
 
                 break;
             default:
                 break;
 
         }
-       
+
     }
 }
 
@@ -197,7 +209,7 @@ class Button extends egret.DisplayObjectContainer {
     }
 }
 
-class MockKillMonsterButton extends Button implements Observer{
+class MockKillMonsterButton extends Button implements Observer {
     public count = 0;
     constructor(ad: string) {
         super(ad);
@@ -205,12 +217,12 @@ class MockKillMonsterButton extends Button implements Observer{
         egret.Ticker.getInstance().register(() => {
 
             if (this.count < 5) {
-                this.body.scaleY*=1.05;
+                this.body.scaleY *= 1.05;
             }
             else if (this.count < 10 || this.count >= 5) {
-                this.body.scaleY/=1.05;
+                this.body.scaleY /= 1.05;
             }
-             this.count+=0.5;
+            this.count += 0.5;
             if (this.count >= 10) {
                 this.count = 0;
             }
@@ -220,14 +232,14 @@ class MockKillMonsterButton extends Button implements Observer{
 
     onButtonClick() {
         console.log(TaskService.getInstance().taskList["001"].status);
-       if (TaskService.getInstance().taskList["001"].status == TaskStatus.DURING) {
-           console.log(TaskService.getInstance().taskList["001"].status);
-        TaskService.getInstance().taskList["001"].condition.onChange ( TaskService.getInstance().taskList["001"]);
+        if (TaskService.getInstance().taskList["001"].status == TaskStatus.DURING) {
+            console.log(TaskService.getInstance().taskList["001"].status);
+            TaskService.getInstance().taskList["001"].condition.onChange(TaskService.getInstance().taskList["001"]);
 
-      }
+        }
     }
 
-    onChange(){
+    onChange() {
 
     }
 }

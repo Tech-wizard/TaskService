@@ -27,7 +27,7 @@ class TaskService implements EventEmitter {
     }
 
     public getTaskByCustomRule(): Task {
-          console.log("getTask");
+          
         for (var id in this.taskList) {
             var task = this.taskList[id];
             if (task.status == TaskStatus.CAN_SUBMIT)
@@ -42,20 +42,35 @@ class TaskService implements EventEmitter {
 
     }
 
+     public getNextTask(): Task {
+          
+        for (var id in this.taskList) {
+            var task = this.taskList[id];
+            if (task.status == TaskStatus.UNACCEPTABLE)
+                return task;
+        }
+
+    }
+
+
 
     accept(id: string) {
+
         if (!id) {
             return ErrorCode.MISSING_TASK;
         }
         let task = this.taskList[id];
         if (task.id == id) {
+
             task.status = TaskStatus.DURING;
             task.onAccept();
+            console.log("onacc后"+task.status);
             this.notify(this.taskList[id]);
            
             return ErrorCode.SUCCESS;
         }
         else {
+
             return ErrorCode.MISSING_TASK;
         }
 
@@ -68,6 +83,7 @@ class TaskService implements EventEmitter {
         }
         let task = this.taskList[id];
         if (task.id == id) {
+            console.log("finish");
             task.status = TaskStatus.SUBMITED;
             this.notify(this.taskList[id]);
 

@@ -29,6 +29,13 @@ var NPC = (function (_super) {
             this._emoji.texture = RES.getRes("notice_png");
             this._emoji.alpha = 1;
         }
+        if (task.status == TaskStatus.DURING && this.id == task.fromNpcId) {
+            this._emoji.alpha = 0;
+        }
+        if (task.status == TaskStatus.DURING && this.id == task.toNpcId) {
+            this._emoji.texture = RES.getRes("question_png");
+            this._emoji.alpha = 1;
+        }
         if (task.status == TaskStatus.CAN_SUBMIT && this.id == task.fromNpcId) {
             //this._emoji.texture = RES.getRes("question_png");
             this._emoji.alpha = 0;
@@ -128,12 +135,14 @@ var DialoguePanel = (function (_super) {
                 TaskService.getInstance().accept(this.currentTask.id);
                 break;
             case TaskStatus.CAN_SUBMIT:
-                //console.log(TaskService.getInstance().finish("000"));
+                console.log("11");
                 TaskService.getInstance().finish(this.currentTask.id);
-                TaskService.getInstance().taskList["001"].status = TaskStatus.ACCEPTABLE;
+                if (TaskService.getInstance().getNextTask() != null) {
+                    TaskService.getInstance().getNextTask().status = TaskStatus.ACCEPTABLE;
+                }
                 //this.linkNPC._emoji.alpha = 1;
                 this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
-                TaskService.getInstance().notify(this.currentTask);
+                TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
                 break;
             default:
                 break;

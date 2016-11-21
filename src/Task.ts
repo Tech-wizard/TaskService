@@ -115,15 +115,14 @@ class KillMonsterTaskCondition implements TaskConditon, Observer {
 
     onSubmit(task: TaskConditionContext) {
 
-      //  TaskService.getInstance().taskList["001"].status=TaskStatus.CAN_SUBMIT;
 
     }
 
     onChange(task: TaskConditionContext) {
 
-        var temp = 0;
-        temp = task.getcurrent();
-        task.setcurrent(temp++);
+       var temp = task.getcurrent();
+       temp++;
+        task.setcurrent(temp);
 
     }
 
@@ -132,9 +131,9 @@ class KillMonsterTaskCondition implements TaskConditon, Observer {
 class NPCTalkTaskCondition implements TaskConditon {
     onAccept(task: TaskConditionContext) {
         //task.current++;
-        var temp = 0;
-        temp = task.getcurrent();
-        task.setcurrent(temp++);
+        // var temp = 0;
+        // temp = task.getcurrent();
+        task.setcurrent(1);
 
        
 

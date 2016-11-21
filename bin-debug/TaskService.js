@@ -15,7 +15,6 @@ var TaskService = (function () {
         return TaskService.instance;
     };
     p.getTaskByCustomRule = function () {
-        console.log("getTask");
         for (var id in this.taskList) {
             var task = this.taskList[id];
             if (task.status == TaskStatus.CAN_SUBMIT)
@@ -27,6 +26,13 @@ var TaskService = (function () {
                 return task;
         }
     };
+    p.getNextTask = function () {
+        for (var id in this.taskList) {
+            var task = this.taskList[id];
+            if (task.status == TaskStatus.UNACCEPTABLE)
+                return task;
+        }
+    };
     p.accept = function (id) {
         if (!id) {
             return ErrorCode.MISSING_TASK;
@@ -35,6 +41,7 @@ var TaskService = (function () {
         if (task.id == id) {
             task.status = TaskStatus.DURING;
             task.onAccept();
+            console.log("onacc后" + task.status);
             this.notify(this.taskList[id]);
             return ErrorCode.SUCCESS;
         }
@@ -48,6 +55,7 @@ var TaskService = (function () {
         }
         var task = this.taskList[id];
         if (task.id == id) {
+            console.log("finish");
             task.status = TaskStatus.SUBMITED;
             this.notify(this.taskList[id]);
             return ErrorCode.SUCCESS;
