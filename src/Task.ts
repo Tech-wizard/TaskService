@@ -10,7 +10,8 @@ class Task implements TaskConditionContext {
     public toNpcId: string;
     public desc: string;
     public total: number;
-
+    public NPCTaskTalk:string;
+    
     constructor(id: string, name: string, condition: TaskConditon) {
 
         this._id = id;

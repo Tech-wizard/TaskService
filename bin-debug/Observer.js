@@ -1,5 +1,6 @@
 var NPC = (function (_super) {
     __extends(NPC, _super);
+    //public NPCTalk:string;
     // public task:Task;
     function NPC(id, ad, x, y, dp) {
         _super.call(this);
@@ -8,7 +9,7 @@ var NPC = (function (_super) {
         this.dialoguePanel = dp;
         this._body.texture = RES.getRes(ad);
         this._emoji.texture = RES.getRes("notice_png");
-        this.id = id;
+        this._id = id;
         this.x = x;
         this.y = y;
         this._body.width = this._body.width / 3;
@@ -23,6 +24,11 @@ var NPC = (function (_super) {
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onNPCClick, this);
     }
     var d = __define,c=NPC,p=c.prototype;
+    d(p, "id"
+        ,function () {
+            return this._id;
+        }
+    );
     p.onChange = function (task) {
         if (task.status == TaskStatus.ACCEPTABLE && this.id == task.fromNpcId) {
             //task.status = TaskStatus.DURING;
@@ -121,7 +127,12 @@ var DialoguePanel = (function (_super) {
     };
     p.updateViewByTask = function (task) {
         this.currentTask = task;
-        //this.textField.text = this.currentTask.desc;
+        if (task.id == "000" && this.linkNPC.id == "NPC_2") {
+            this.textField.text = "请祝我一臂之力，帮我杀怪";
+        }
+        else {
+            this.textField.text = this.currentTask.NPCTaskTalk;
+        }
     };
     p.disshowDpanel = function () {
         this.removeChild(this.body);
@@ -135,14 +146,15 @@ var DialoguePanel = (function (_super) {
                 TaskService.getInstance().accept(this.currentTask.id);
                 break;
             case TaskStatus.CAN_SUBMIT:
-                console.log("11");
                 TaskService.getInstance().finish(this.currentTask.id);
                 if (TaskService.getInstance().getNextTask() != null) {
                     TaskService.getInstance().getNextTask().status = TaskStatus.ACCEPTABLE;
                 }
                 //this.linkNPC._emoji.alpha = 1;
-                this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
-                TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
+                if (TaskService.getInstance().getTaskByCustomRule() != null) {
+                    this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
+                    TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
+                }
                 break;
             default:
                 break;
@@ -166,10 +178,11 @@ var Button = (function (_super) {
 egret.registerClass(Button,'Button');
 var MockKillMonsterButton = (function (_super) {
     __extends(MockKillMonsterButton, _super);
-    function MockKillMonsterButton(ad) {
+    function MockKillMonsterButton(ad, linkTask) {
         var _this = this;
         _super.call(this, ad);
         this.count = 0;
+        this.linkTask = linkTask;
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onButtonClick, this);
         egret.Ticker.getInstance().register(function () {
             if (_this.count < 5) {
@@ -186,10 +199,10 @@ var MockKillMonsterButton = (function (_super) {
     }
     var d = __define,c=MockKillMonsterButton,p=c.prototype;
     p.onButtonClick = function () {
-        console.log(TaskService.getInstance().taskList["001"].status);
-        if (TaskService.getInstance().taskList["001"].status == TaskStatus.DURING) {
-            console.log(TaskService.getInstance().taskList["001"].status);
-            TaskService.getInstance().taskList["001"].condition.onChange(TaskService.getInstance().taskList["001"]);
+        if (TaskService.getInstance().taskList[this.linkTask].status == TaskStatus.DURING) {
+            //console.log(TaskService.getInstance().taskList[this.linkTask]);
+            //TaskService.getInstance().taskList[this.linkTask].condition.onChange(TaskService.getInstance().taskList[this.linkTask]);
+            SceneService.getInstance().notify(TaskService.getInstance().taskList[this.linkTask]);
         }
     };
     p.onChange = function () {

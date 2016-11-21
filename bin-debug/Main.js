@@ -127,13 +127,15 @@ var Main = (function (_super) {
         var task_0 = new Task("000", "对话任务", new NPCTalkTaskCondition());
         task_0.fromNpcId = "NPC_1";
         task_0.toNpcId = "NPC_2";
-        task_0.desc = "请先跟NPC1对话，再跟NPC2对话";
+        task_0.desc = "先跟上面的NPC对话，再跟下面的NPC对话";
+        task_0.NPCTaskTalk = "请跟下面的人对话，他最近很困扰";
         task_0.total = 1;
         task_0.status = TaskStatus.ACCEPTABLE;
         var task_1 = new Task("001", "杀怪任务", new KillMonsterTaskCondition());
         task_1.fromNpcId = "NPC_2";
         task_1.toNpcId = "NPC_2";
-        task_1.desc = "请杀掉10个白鹭icon怪物";
+        task_1.desc = "再次跟下面的NPC对话，接任务后击杀怪物";
+        task_1.NPCTaskTalk = "请帮我杀掉10个白鹭icon怪物";
         task_1.total = 10;
         task_1.status = TaskStatus.UNACCEPTABLE;
         TaskService.getInstance().addTask(task_0);
@@ -150,13 +152,13 @@ var Main = (function (_super) {
         TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
         Dpanel_1.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
         Dpanel_2.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
-        var monster_1 = new MockKillMonsterButton("egret_icon_png");
+        var monster_1 = new MockKillMonsterButton("egret_icon_png", "001");
         this.addChild(monster_1);
         monster_1.body.x = 350;
         monster_1.body.y = 600;
-        var scenceService = new SceneService();
-        scenceService.addObserver(monster_1);
-        scenceService.addObserver(task_1.condition);
+        //var scenceService:SceneService = new SceneService();
+        SceneService.getInstance().addObserver(monster_1);
+        SceneService.getInstance().addObserver(task_1.condition);
     };
     p.createBitmapByName = function (name) {
         var result = new egret.Bitmap();

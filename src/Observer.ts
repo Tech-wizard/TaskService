@@ -5,8 +5,9 @@ interface Observer {
 class NPC extends egret.DisplayObjectContainer implements Observer {
     public _emoji: egret.Bitmap;
     public _body: egret.Bitmap;
-    private id: string;
+    private _id: string;
     public dialoguePanel: DialoguePanel;
+    //public NPCTalk:string;
     // public task:Task;
     constructor(id: string, ad: string, x: number, y: number, dp: DialoguePanel) {
         super();
@@ -15,7 +16,7 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
         this.dialoguePanel = dp;
         this._body.texture = RES.getRes(ad);
         this._emoji.texture = RES.getRes("notice_png");
-        this.id = id;
+        this._id = id;
         this.x = x;
         this.y = y;
         this._body.width = this._body.width / 3;
@@ -31,8 +32,11 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
 
     }
 
+ get id():string{
+     return this._id;
+ }
     onChange(task: Task) {
-        if (task.status == TaskStatus.ACCEPTABLE && this.id == task.fromNpcId) {
+        if (task.status == TaskStatus.ACCEPTABLE && this.id == task.fromNpcId ) {
             //task.status = TaskStatus.DURING;
             this._emoji.texture = RES.getRes("notice_png");
             this._emoji.alpha = 1;
@@ -160,8 +164,12 @@ class DialoguePanel extends egret.DisplayObjectContainer {
 
     public updateViewByTask(task: Task) {
         this.currentTask = task;
-        //this.textField.text = this.currentTask.desc;
-
+        if(task.id=="000"&&this.linkNPC.id=="NPC_2"){
+         this.textField.text ="请祝我一臂之力，帮我杀怪";
+        }
+        else{
+        this.textField.text = this.currentTask.NPCTaskTalk;
+        }
     }
 
     disshowDpanel() {
@@ -181,13 +189,17 @@ class DialoguePanel extends egret.DisplayObjectContainer {
 
                 break;
             case TaskStatus.CAN_SUBMIT:
-                console.log("11");
+               
                 TaskService.getInstance().finish(this.currentTask.id);
+
                 if(TaskService.getInstance().getNextTask()!=null)
                 {TaskService.getInstance().getNextTask().status = TaskStatus.ACCEPTABLE;}
                 //this.linkNPC._emoji.alpha = 1;
+
+                if(TaskService.getInstance().getTaskByCustomRule()!=null){
                 this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
                 TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
+                }
 
                 break;
             default:
@@ -211,8 +223,11 @@ class Button extends egret.DisplayObjectContainer {
 
 class MockKillMonsterButton extends Button implements Observer {
     public count = 0;
-    constructor(ad: string) {
+    public linkTask:string;
+
+    constructor(ad: string,linkTask:string) {
         super(ad);
+        this.linkTask = linkTask;
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onButtonClick, this);
         egret.Ticker.getInstance().register(() => {
 
@@ -231,11 +246,12 @@ class MockKillMonsterButton extends Button implements Observer {
     }
 
     onButtonClick() {
-        console.log(TaskService.getInstance().taskList["001"].status);
-        if (TaskService.getInstance().taskList["001"].status == TaskStatus.DURING) {
-            console.log(TaskService.getInstance().taskList["001"].status);
-            TaskService.getInstance().taskList["001"].condition.onChange(TaskService.getInstance().taskList["001"]);
+    
+        if (TaskService.getInstance().taskList[this.linkTask].status == TaskStatus.DURING) {
 
+            //console.log(TaskService.getInstance().taskList[this.linkTask]);  神奇的bug，注释掉console下面这句就执行不了，有这行console.log 下面就能执行
+            //TaskService.getInstance().taskList[this.linkTask].condition.onChange(TaskService.getInstance().taskList[this.linkTask]);
+            SceneService.getInstance().notify(TaskService.getInstance().taskList[this.linkTask]);
         }
     }
 
