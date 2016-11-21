@@ -7,7 +7,7 @@ var NPC = (function (_super) {
         this._emoji = new egret.Bitmap();
         this.dialoguePanel = dp;
         this._body.texture = RES.getRes(ad);
-        // this._emoji.texture = RES.getRes("notice_png");
+        this._emoji.texture = RES.getRes("notice_png");
         this.id = id;
         this.x = x;
         this.y = y;
@@ -30,7 +30,6 @@ var NPC = (function (_super) {
             this._emoji.alpha = 1;
         }
         if (task.status == TaskStatus.CAN_SUBMIT && this.id == task.fromNpcId) {
-            //task.status = TaskStatus.;
             //this._emoji.texture = RES.getRes("question_png");
             this._emoji.alpha = 0;
         }
@@ -88,9 +87,8 @@ var TaskPanel = (function (_super) {
 egret.registerClass(TaskPanel,'TaskPanel',["Observer"]);
 var DialoguePanel = (function (_super) {
     __extends(DialoguePanel, _super);
-    function DialoguePanel(talk, linkNPC) {
+    function DialoguePanel(talk) {
         _super.call(this);
-        this.linkNPC = linkNPC;
         this.body = new egret.Shape();
         this.body.graphics.beginFill(0x000000, 0.5);
         this.body.graphics.drawRect(0, 0, 600, 172);
@@ -113,18 +111,15 @@ var DialoguePanel = (function (_super) {
         this.addChild(this.body);
         this.addChild(this.button);
         this.addChild(this.textField);
-        this.currentTask = TaskService.getInstance().getTaskByCustomRule();
-        this.updateViewByTask(this.currentTask);
     };
     p.updateViewByTask = function (task) {
         this.currentTask = task;
-        this.textField.text = this.currentTask.desc;
+        //this.textField.text = this.currentTask.desc;
     };
     p.disshowDpanel = function () {
         this.removeChild(this.body);
         this.removeChild(this.button);
         this.removeChild(this.textField);
-        //this.alpha=0;
     };
     p.onButtonClick = function () {
         this.disshowDpanel();
@@ -136,12 +131,13 @@ var DialoguePanel = (function (_super) {
                 //console.log(TaskService.getInstance().finish("000"));
                 TaskService.getInstance().finish(this.currentTask.id);
                 TaskService.getInstance().taskList["001"].status = TaskStatus.ACCEPTABLE;
-                TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
+                //this.linkNPC._emoji.alpha = 1;
+                this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
+                TaskService.getInstance().notify(this.currentTask);
                 break;
             default:
                 break;
         }
-        // TaskService.getInstance().notify(TaskService.getInstance().taskList["000"]);
     };
     return DialoguePanel;
 }(egret.DisplayObjectContainer));
@@ -181,10 +177,11 @@ var MockKillMonsterButton = (function (_super) {
     }
     var d = __define,c=MockKillMonsterButton,p=c.prototype;
     p.onButtonClick = function () {
-        console.log('1111');
-        //if (TaskService.getInstance().taskList["001"].status == TaskStatus.DURING) {
-        TaskService.getInstance().taskList["001"].condition.onChange();
-        //}
+        console.log(TaskService.getInstance().taskList["001"].status);
+        if (TaskService.getInstance().taskList["001"].status == TaskStatus.DURING) {
+            console.log(TaskService.getInstance().taskList["001"].status);
+            TaskService.getInstance().taskList["001"].condition.onChange(TaskService.getInstance().taskList["001"]);
+        }
     };
     p.onChange = function () {
     };

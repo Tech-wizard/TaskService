@@ -15,6 +15,7 @@ var TaskService = (function () {
         return TaskService.instance;
     };
     p.getTaskByCustomRule = function () {
+        console.log("getTask");
         for (var id in this.taskList) {
             var task = this.taskList[id];
             if (task.status == TaskStatus.CAN_SUBMIT)
@@ -32,7 +33,7 @@ var TaskService = (function () {
         }
         var task = this.taskList[id];
         if (task.id == id) {
-            task.status = TaskStatus.CAN_SUBMIT;
+            task.status = TaskStatus.DURING;
             task.onAccept();
             this.notify(this.taskList[id]);
             return ErrorCode.SUCCESS;

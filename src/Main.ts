@@ -143,10 +143,13 @@ class Main extends egret.DisplayObjectContainer {
         //     }
         //var taskService: TaskService = new TaskService();
        
-        var Dpanel_1: DialoguePanel = new DialoguePanel("你好，请告诉对面的人",NPC_1);
-        var Dpanel_2: DialoguePanel = new DialoguePanel("好的，我知道了",NPC_2);
+        var Dpanel_1: DialoguePanel = new DialoguePanel("你好，请告诉对面的人");
+        var Dpanel_2: DialoguePanel = new DialoguePanel("好的，我知道了");
         var NPC_1: NPC = new NPC("NPC_1", "npc1_jpg", 150, 250, Dpanel_1);
         var NPC_2: NPC = new NPC("NPC_2", "npc2_jpg", 250, 850, Dpanel_2);
+
+        Dpanel_1.linkNPC=NPC_1;
+        Dpanel_2.linkNPC=NPC_2;
 
         var task_0: Task = new Task("000", "对话任务", new NPCTalkTaskCondition());
         task_0.fromNpcId = "NPC_1";
@@ -177,15 +180,17 @@ class Main extends egret.DisplayObjectContainer {
         this.addChild(Dpanel_2);
 
         TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
+        Dpanel_1.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
+        Dpanel_2.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
 
         var monster_1: MockKillMonsterButton = new MockKillMonsterButton("egret_icon_png");
         this.addChild(monster_1);
-        monster_1.body.x = 300;
+        monster_1.body.x = 350;
         monster_1.body.y = 600;
 
        var scenceService:SceneService = new SceneService();
        scenceService.addObserver(monster_1);
-       //scenceService.addObserver();
+       scenceService.addObserver(task_1.condition);
 
     }
 

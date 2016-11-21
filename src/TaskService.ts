@@ -27,7 +27,7 @@ class TaskService implements EventEmitter {
     }
 
     public getTaskByCustomRule(): Task {
-
+          console.log("getTask");
         for (var id in this.taskList) {
             var task = this.taskList[id];
             if (task.status == TaskStatus.CAN_SUBMIT)
@@ -49,7 +49,7 @@ class TaskService implements EventEmitter {
         }
         let task = this.taskList[id];
         if (task.id == id) {
-            task.status = TaskStatus.CAN_SUBMIT;
+            task.status = TaskStatus.DURING;
             task.onAccept();
             this.notify(this.taskList[id]);
            
@@ -60,6 +60,7 @@ class TaskService implements EventEmitter {
         }
 
     }
+
 
     finish(id: string) {
         if (!id) {
@@ -95,11 +96,11 @@ class TaskService implements EventEmitter {
         }
         this.observerList.push(observer);
     }
-
    
 }
 
 enum ErrorCode {
+
     SUCCESS,
     MISSING_TASK,
     REPEAT_OBSERVER

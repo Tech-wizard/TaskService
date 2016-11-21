@@ -68,11 +68,6 @@ var KillMonsterTaskCondition = (function () {
     }
     var d = __define,c=KillMonsterTaskCondition,p=c.prototype;
     p.onAccept = function (task) {
-        //task.current++;
-        // var temp = 0;
-        // temp = task.getcurrent();
-        // task.setcurrent(temp++);
-        //  task.checkStatus();
         task.setcurrent(task.getcurrent());
     };
     p.onSubmit = function (task) {
@@ -95,10 +90,10 @@ var NPCTalkTaskCondition = (function () {
         var temp = 0;
         temp = task.getcurrent();
         task.setcurrent(temp++);
-        // task.checkStatus();
     };
     p.onSubmit = function (task) {
-        //  TaskService.getInstance().taskList["000"].status=TaskStatus.CAN_SUBMIT;
+    };
+    p.onChange = function (task) {
     };
     return NPCTalkTaskCondition;
 }());

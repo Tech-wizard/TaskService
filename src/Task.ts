@@ -12,10 +12,10 @@ class Task implements TaskConditionContext {
     public total: number;
 
     constructor(id: string, name: string, condition: TaskConditon) {
+
         this._id = id;
         this._name = name;
         this._condition = condition;
-
     }
 
     public checkStatus() {
@@ -71,6 +71,8 @@ class Task implements TaskConditionContext {
         this._condition.onAccept(this);
     }
 
+   
+
 }
 
 enum TaskStatus {
@@ -89,12 +91,14 @@ interface TaskConditon {
 
     onSubmit(task: TaskConditionContext);
 
+    onChange(task: TaskConditionContext);
+
 }
 
 interface TaskConditionContext {
     getcurrent(): number;
     setcurrent(current: number);
-    //checkStatus();
+  
 }
 
 
@@ -105,12 +109,7 @@ class KillMonsterTaskCondition implements TaskConditon, Observer {
 
     onAccept(task: TaskConditionContext) {
 
-        //task.current++;
-        // var temp = 0;
-        // temp = task.getcurrent();
-        // task.setcurrent(temp++);
-
-        //  task.checkStatus();
+       
          task.setcurrent(task.getcurrent());
     }
 
@@ -137,15 +136,17 @@ class NPCTalkTaskCondition implements TaskConditon {
         temp = task.getcurrent();
         task.setcurrent(temp++);
 
-        // task.checkStatus();
+       
 
 
     }
 
     onSubmit(task: TaskConditionContext) {
 
-   //  TaskService.getInstance().taskList["000"].status=TaskStatus.CAN_SUBMIT;
-
+  
     }
 
+      onChange(task: TaskConditionContext) {
+
+      }
 }

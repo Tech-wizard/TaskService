@@ -14,7 +14,7 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
         this._emoji = new egret.Bitmap();
         this.dialoguePanel = dp;
         this._body.texture = RES.getRes(ad);
-       // this._emoji.texture = RES.getRes("notice_png");
+        this._emoji.texture = RES.getRes("notice_png");
         this.id = id;
         this.x = x;
         this.y = y;
@@ -37,15 +37,17 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
             this._emoji.texture = RES.getRes("notice_png");
             this._emoji.alpha = 1;
         }
+
         if (task.status == TaskStatus.CAN_SUBMIT && this.id == task.fromNpcId) {
-            //task.status = TaskStatus.;
             //this._emoji.texture = RES.getRes("question_png");
             this._emoji.alpha = 0;
         }
+
         if (task.status == TaskStatus.CAN_SUBMIT && this.id == task.toNpcId) {
             this._emoji.texture = RES.getRes("question_png");
             this._emoji.alpha = 1;
         }
+
         if (task.status == TaskStatus.SUBMITED && this.id == task.toNpcId) {
             this._emoji.alpha = 0;
         }
@@ -114,10 +116,9 @@ class DialoguePanel extends egret.DisplayObjectContainer {
     linkNPC:NPC;
     nextTask:Task;
 
-    constructor(talk: string,linkNPC:NPC) {
+    constructor(talk: string) {
 
         super();
-        this.linkNPC = linkNPC;
         this.body = new egret.Shape();
         this.body.graphics.beginFill(0x000000, 0.5);
         this.body.graphics.drawRect(0, 0, 600, 172);
@@ -134,6 +135,7 @@ class DialoguePanel extends egret.DisplayObjectContainer {
         this.button.y = 550;
         this.button.touchEnabled = true;
         this.button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
+        
        
     }
 
@@ -142,21 +144,20 @@ class DialoguePanel extends egret.DisplayObjectContainer {
         this.addChild(this.body);
         this.addChild(this.button);
         this.addChild(this.textField);  
-        this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
-        
-
+           
     }
 
     public updateViewByTask(task:Task){
         this.currentTask = task;
         //this.textField.text = this.currentTask.desc;
+        
     }
 
     disshowDpanel() {
         this.removeChild(this.body);
         this.removeChild(this.button);
         this.removeChild(this.textField);
-        //this.alpha=0;
+       
     }
 
     onButtonClick() {
@@ -164,7 +165,7 @@ class DialoguePanel extends egret.DisplayObjectContainer {
         this.disshowDpanel();
         switch (this.currentTask.status) {
             case TaskStatus.ACCEPTABLE:
-
+               
                 TaskService.getInstance().accept(this.currentTask.id);
 
                 break;
@@ -172,14 +173,16 @@ class DialoguePanel extends egret.DisplayObjectContainer {
                 //console.log(TaskService.getInstance().finish("000"));
                 TaskService.getInstance().finish(this.currentTask.id);
                 TaskService.getInstance().taskList["001"].status = TaskStatus.ACCEPTABLE;
-                TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
+                //this.linkNPC._emoji.alpha = 1;
+                this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
+                TaskService.getInstance().notify(this.currentTask);
 
                 break;
             default:
                 break;
 
         }
-        // TaskService.getInstance().notify(TaskService.getInstance().taskList["000"]);
+       
     }
 }
 
@@ -216,10 +219,12 @@ class MockKillMonsterButton extends Button implements Observer{
     }
 
     onButtonClick() {
-        console.log('1111');
-        //if (TaskService.getInstance().taskList["001"].status == TaskStatus.DURING) {
-            TaskService.getInstance().taskList["001"].condition.onChange();
-        //}
+        console.log(TaskService.getInstance().taskList["001"].status);
+       if (TaskService.getInstance().taskList["001"].status == TaskStatus.DURING) {
+           console.log(TaskService.getInstance().taskList["001"].status);
+        TaskService.getInstance().taskList["001"].condition.onChange ( TaskService.getInstance().taskList["001"]);
+
+      }
     }
 
     onChange(){
