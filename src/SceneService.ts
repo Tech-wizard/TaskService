@@ -1,6 +1,6 @@
-class SceneService implements EventEmitter {
+class SceneService implements EventEmitter<number> {
     
-private observerList: Observer[] = [];
+private observerList: Observer<number>[] = [];
 private static instance;
 private static count = 0;
 constructor() {
@@ -16,7 +16,7 @@ constructor() {
         return SceneService.instance;
     }
 
-     public addObserver(observer: Observer) {
+     public addObserver(observer: Observer<number>) {
         for (var i = 0; i < this.observerList.length; i++) {
             if (observer == this.observerList[i])
                 return ErrorCode.REPEAT_OBSERVER;
@@ -24,10 +24,10 @@ constructor() {
         this.observerList.push(observer);
     }
 
-     public notify(task: Task) {
+     public notify(monsterId:number) {
       
         for (var observer of this.observerList) {
-            observer.onChange(task);
+            observer.onChange(monsterId);
         }
     }
 }

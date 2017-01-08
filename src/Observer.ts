@@ -1,8 +1,8 @@
-interface Observer {
-    onChange(task: Task): void;
+interface Observer<T> {
+    onChange(data: T): void;
 }
 
-class NPC extends egret.DisplayObjectContainer implements Observer {
+class NPC extends egret.DisplayObjectContainer implements Observer<Task> {
     public _emoji: egret.Bitmap;
     public _body: egret.Bitmap;
     private _id: string;
@@ -32,18 +32,18 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
 
     }
 
- get id():string{
-     return this._id;
- }
+    get id(): string {
+        return this._id;
+    }
     onChange(task: Task) {
-        if (task.status == TaskStatus.ACCEPTABLE && this.id == task.fromNpcId ) {
+        if (task.status == TaskStatus.ACCEPTABLE && this.id == task.fromNpcId) {
             //task.status = TaskStatus.DURING;
             this._emoji.texture = RES.getRes("notice_png");
             this._emoji.alpha = 1;
         }
 
         if (task.status == TaskStatus.DURING && this.id == task.fromNpcId) {
-            
+
             this._emoji.alpha = 0;
         }
 
@@ -76,7 +76,7 @@ class NPC extends egret.DisplayObjectContainer implements Observer {
     }
 }
 
-class TaskPanel extends egret.DisplayObjectContainer implements Observer {
+class TaskPanel extends egret.DisplayObjectContainer implements Observer<Task> {
 
     body: egret.Shape;
     textField: egret.TextField;
@@ -164,11 +164,11 @@ class DialoguePanel extends egret.DisplayObjectContainer {
 
     public updateViewByTask(task: Task) {
         this.currentTask = task;
-        if(task.id=="000"&&this.linkNPC.id=="NPC_2"){
-         this.textField.text ="请祝我一臂之力，帮我杀怪";
+        if (task.id == "000" && this.linkNPC.id == "NPC_2") {
+            this.textField.text = "请祝我一臂之力，帮我杀怪";
         }
-        else{
-        this.textField.text = this.currentTask.NPCTaskTalk;
+        else {
+            this.textField.text = this.currentTask.NPCTaskTalk;
         }
     }
 
@@ -189,16 +189,16 @@ class DialoguePanel extends egret.DisplayObjectContainer {
 
                 break;
             case TaskStatus.CAN_SUBMIT:
-               
+
                 TaskService.getInstance().finish(this.currentTask.id);
 
-                if(TaskService.getInstance().getNextTask()!=null)
-                {TaskService.getInstance().getNextTask().status = TaskStatus.ACCEPTABLE;}
+                if (TaskService.getInstance().getNextTask() != null)
+                { TaskService.getInstance().getNextTask().status = TaskStatus.ACCEPTABLE; }
                 //this.linkNPC._emoji.alpha = 1;
 
-                if(TaskService.getInstance().getTaskByCustomRule()!=null){
-                this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
-                TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
+                if (TaskService.getInstance().getTaskByCustomRule() != null) {
+                    this.updateViewByTask(TaskService.getInstance().getTaskByCustomRule());
+                    TaskService.getInstance().notify(TaskService.getInstance().getTaskByCustomRule());
                 }
 
                 break;
@@ -221,11 +221,11 @@ class Button extends egret.DisplayObjectContainer {
     }
 }
 
-class MockKillMonsterButton extends Button implements Observer {
+class MockKillMonsterButton extends Button implements Observer<Task> {
     public count = 0;
-    public linkTask:string;
+    public linkTask: string;
 
-    constructor(ad: string,linkTask:string) {
+    constructor(ad: string, linkTask: string) {
         super(ad);
         this.linkTask = linkTask;
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onButtonClick, this);
@@ -246,7 +246,7 @@ class MockKillMonsterButton extends Button implements Observer {
     }
 
     onButtonClick() {
-    
+
         if (TaskService.getInstance().taskList[this.linkTask].status == TaskStatus.DURING) {
 
             //console.log(TaskService.getInstance().taskList[this.linkTask]);  神奇的bug，注释掉console下面这句就执行不了，有这行console.log 下面就能执行
@@ -255,7 +255,7 @@ class MockKillMonsterButton extends Button implements Observer {
         }
     }
 
-    onChange() {
+    onChange(data:Task) {
 
     }
 }

@@ -106,7 +106,7 @@ interface TaskConditionContext {
 
 
 
-class KillMonsterTaskCondition implements TaskConditon, Observer {
+class KillMonsterTaskCondition implements TaskConditon, Observer<Task> {
 
     onAccept(task: TaskConditionContext) {
 

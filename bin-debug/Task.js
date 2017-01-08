@@ -79,7 +79,7 @@ var KillMonsterTaskCondition = (function () {
     };
     return KillMonsterTaskCondition;
 }());
-egret.registerClass(KillMonsterTaskCondition,'KillMonsterTaskCondition',["TaskConditon","Observer"]);
+egret.registerClass(KillMonsterTaskCondition,'KillMonsterTaskCondition',["TaskConditon"]);
 var NPCTalkTaskCondition = (function () {
     function NPCTalkTaskCondition() {
     }

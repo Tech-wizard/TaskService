@@ -1,9 +1,9 @@
-interface EventEmitter {
-    addObserver(observer: Observer);
-    notify(task: Task);
+interface EventEmitter<T> {
+    addObserver(observer: Observer<T>);
+    notify(task: T);
 }
 
-class TaskService implements EventEmitter {
+class TaskService implements EventEmitter<Task> {
 
     private static instance;
     private static count = 0;
@@ -11,7 +11,7 @@ class TaskService implements EventEmitter {
         [index: string]: Task
     } = {};
 
-    private observerList: Observer[] = [];
+    private observerList: Observer<Task>[] = [];
 
     constructor() {
         TaskService.count++;
@@ -105,7 +105,7 @@ class TaskService implements EventEmitter {
         this.taskList[task.id] = task;
     }
 
-    public addObserver(observer: Observer) {
+    public addObserver(observer: Observer<Task>) {
         for (var i = 0; i < this.observerList.length; i++) {
             if (observer == this.observerList[i])
                 return ErrorCode.REPEAT_OBSERVER;

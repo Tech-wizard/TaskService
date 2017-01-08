@@ -60,7 +60,7 @@ var NPC = (function (_super) {
     };
     return NPC;
 }(egret.DisplayObjectContainer));
-egret.registerClass(NPC,'NPC',["Observer"]);
+egret.registerClass(NPC,'NPC');
 var TaskPanel = (function (_super) {
     __extends(TaskPanel, _super);
     //task:Task
@@ -97,7 +97,7 @@ var TaskPanel = (function (_super) {
     };
     return TaskPanel;
 }(egret.DisplayObjectContainer));
-egret.registerClass(TaskPanel,'TaskPanel',["Observer"]);
+egret.registerClass(TaskPanel,'TaskPanel');
 var DialoguePanel = (function (_super) {
     __extends(DialoguePanel, _super);
     function DialoguePanel(talk) {
@@ -200,14 +200,14 @@ var MockKillMonsterButton = (function (_super) {
     var d = __define,c=MockKillMonsterButton,p=c.prototype;
     p.onButtonClick = function () {
         if (TaskService.getInstance().taskList[this.linkTask].status == TaskStatus.DURING) {
-            //console.log(TaskService.getInstance().taskList[this.linkTask]);
+            //console.log(TaskService.getInstance().taskList[this.linkTask]);  神奇的bug，注释掉console下面这句就执行不了，有这行console.log 下面就能执行
             //TaskService.getInstance().taskList[this.linkTask].condition.onChange(TaskService.getInstance().taskList[this.linkTask]);
             SceneService.getInstance().notify(TaskService.getInstance().taskList[this.linkTask]);
         }
     };
-    p.onChange = function () {
+    p.onChange = function (data) {
     };
     return MockKillMonsterButton;
 }(Button));
-egret.registerClass(MockKillMonsterButton,'MockKillMonsterButton',["Observer"]);
+egret.registerClass(MockKillMonsterButton,'MockKillMonsterButton');
 //# sourceMappingURL=Observer.js.map

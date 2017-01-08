@@ -20,14 +20,14 @@ var SceneService = (function () {
         }
         this.observerList.push(observer);
     };
-    p.notify = function (task) {
+    p.notify = function (monsterId) {
         for (var _i = 0, _a = this.observerList; _i < _a.length; _i++) {
             var observer = _a[_i];
-            observer.onChange(task);
+            observer.onChange(monsterId);
         }
     };
     SceneService.count = 0;
     return SceneService;
 }());
-egret.registerClass(SceneService,'SceneService',["EventEmitter"]);
+egret.registerClass(SceneService,'SceneService');
 //# sourceMappingURL=SceneService.js.map

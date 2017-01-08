@@ -84,7 +84,7 @@ var TaskService = (function () {
     TaskService.count = 0;
     return TaskService;
 }());
-egret.registerClass(TaskService,'TaskService',["EventEmitter"]);
+egret.registerClass(TaskService,'TaskService');
 var ErrorCode;
 (function (ErrorCode) {
     ErrorCode[ErrorCode["SUCCESS"] = 0] = "SUCCESS";
